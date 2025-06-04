@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Employee Dashboard</h2>
+  <form id="empForm">
+    <input type="text" id="name" placeholder="Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="text" id="position" placeholder="Position" required />
+    <input type="number" id="salary" placeholder="Salary" required />
+    <button type="submit">Add</button>
+  </form>
+  <ul id="empList"></ul>
+
+  <script>
+    const list = document.getElementById('empList');
+
+    async function load() {
+      const res = await fetch('http://localhost:3000/api/employees');
+      const data = await res.json();
+      list.innerHTML = '';
+      data.forEach(emp => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${emp.name} - ${emp.position} - ${emp.salary} 
+          <button onclick="del('${emp._id}')">Delete</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function del(id) {
+      await fetch(`http://localhost:3000/api/employees/${id}`, { method: 'DELETE' });
+      load();
+    }
+
+    document.getElementById('empForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: name.value,
+        email: email.value,
+        position: position.value,
+        salary: salary.value
+      };
+      await fetch('http://localhost:3000/api/employees', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      load();
+    });
+
+    load();
+  </script>
+</body>
+</html>

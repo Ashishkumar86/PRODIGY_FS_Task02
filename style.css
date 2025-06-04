@@ -1,0 +1,13 @@
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: auto;
+}
+form input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+}
+ul li {
+  margin: 5px 0;
+}
